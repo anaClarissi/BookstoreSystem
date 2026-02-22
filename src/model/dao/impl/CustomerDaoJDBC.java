@@ -2,13 +2,13 @@ package model.dao.impl;
 
 import db.DB;
 import db.DbExeption;
+import db.DbIntegrityExeption;
 import model.dao.CustomerDao;
 import model.entities.Customer;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class CustomerDaoJDBC implements CustomerDao {
 
@@ -36,7 +36,7 @@ public class CustomerDaoJDBC implements CustomerDao {
 
             if (isInList(customer)) {
 
-                throw new DbExeption("Error -> Customer already exist!");
+                throw new DbIntegrityExeption("Error -> Customer already exist!");
 
             }
 
@@ -62,7 +62,7 @@ public class CustomerDaoJDBC implements CustomerDao {
 
             } else {
 
-                throw new DbExeption("Error -> No rows Affected!");
+                throw new DbIntegrityExeption("Error -> No rows Affected!");
 
             }
 
@@ -123,7 +123,7 @@ public class CustomerDaoJDBC implements CustomerDao {
 
             if (rows == 0) {
 
-                throw new DbExeption("Error -> CustomerDaoJDBC deleteById() <- This ID does not exist!");
+                throw new DbIntegrityExeption("Error -> CustomerDaoJDBC deleteById() <- This ID does not exist!");
 
             }
 
