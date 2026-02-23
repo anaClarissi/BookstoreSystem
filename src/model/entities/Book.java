@@ -16,13 +16,13 @@ public class Book {
 
     public Book () {}
 
-    public Book(Integer id, String title, Author author, LocalDateTime registrationDate, LocalDateTime updateDate) {
+    public Book(Integer id, String title, Author author) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.status = BookStatus.AVAILABLE;
-        this.registrationDate = registrationDate;
-        this.updateDate = updateDate;
+        this.registrationDate = LocalDateTime.now();
+        this.updateDate = LocalDateTime.now();
     }
 
     public Integer getId() {
@@ -120,8 +120,11 @@ public class Book {
 
         return getId() + " | "
                 + getTitle() + " | "
-                + getAuthor().getName() + " | "
-                + getStatus() + " | ";
+                + getStatus() + " | "
+                + "Author: "
+                + getAuthor().getId()
+                + " - "
+                + getAuthor().getName();
     }
 
 }

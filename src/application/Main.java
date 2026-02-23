@@ -5,6 +5,7 @@ import model.dao.AuthorDao;
 import model.dao.BookDao;
 import model.dao.CustomerDao;
 import model.dao.DaoFactory;
+import model.dao.impl.AuthorDaoJDBC;
 import model.entities.Author;
 import model.entities.Book;
 import model.entities.Customer;
@@ -16,13 +17,56 @@ import java.util.Scanner;
 
 public class Main {
 
+    public static final CustomerDao customerDao = DaoFactory.createCustomerDao();
+
+    public static final AuthorDao authorDao = DaoFactory.createAuthorDao();
+
+    public static final BookDao bookDao = DaoFactory.createBookDao();
+
     public static void main(String[] args) {
 
-        //crudCustomer();
+        Scanner scanner = new Scanner(System.in);
 
-        //crudBook();
+        while (true) {
 
-        crudAuthor();
+            System.out.println("=============");
+            System.out.println("     MENU    ");
+            System.out.println("=============");
+            System.out.println("1 - Customer");
+            System.out.println("2 - Author");
+            System.out.println("3 - Book");
+            System.out.println("4 - Exit");
+            System.out.println("=============");
+            System.out.print("Enter: ");
+            int input = scanner.nextInt();
+
+            if (input == 1) {
+
+                crudCustomer();
+
+            }
+
+            else if (input == 2) {
+
+                crudAuthor();
+
+            }
+
+            else if (input == 3) {
+
+                crudBook();
+
+            }
+
+            else {
+
+                break;
+
+            }
+
+        }
+
+        scanner.close();
 
     }
 
@@ -32,11 +76,11 @@ public class Main {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        AuthorDao authorDao = DaoFactory.createAuthorDao();
-
-        CustomerDao customerDao = DaoFactory.createCustomerDao();
-
         while (true) {
+
+            System.out.println("=============");
+            System.out.println("    Author   ");
+            System.out.println("=============");
 
             crud();
 
@@ -54,6 +98,10 @@ public class Main {
                 List<Author> list = authorDao.findAll();
 
                 for (Author obj : list) System.out.println(obj);
+
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
 
                 System.out.println();
 
@@ -84,6 +132,10 @@ public class Main {
 
                 }
 
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
+
                 System.out.println();
 
             }
@@ -109,6 +161,10 @@ public class Main {
                     System.out.println("Author does not exist");
 
                 }
+
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
 
                 System.out.println();
 
@@ -136,6 +192,10 @@ public class Main {
                     System.out.println("Customer does not exist");
 
                 }
+
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
 
                 System.out.println();
 
@@ -205,6 +265,10 @@ public class Main {
 
                 }
 
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
+
                 System.out.println();
 
             }
@@ -222,7 +286,6 @@ public class Main {
 
         }
 
-        scanner.close();
 
     }
 
@@ -230,9 +293,11 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        BookDao bookDao = DaoFactory.createBookDao();
-
         while (true) {
+
+            System.out.println("=============");
+            System.out.println("     Book    ");
+            System.out.println("=============");
 
             crud();
 
@@ -310,7 +375,7 @@ public class Main {
 
             }
 
-            /*
+            // Insert
             else if (choice == 4) {
 
                 System.out.println();
@@ -322,22 +387,27 @@ public class Main {
                     System.out.print("Title: ");
                     String title = scanner.nextLine();
 
-                    System.out.print("Email: ");
-                    String email = scanner.nextLine();
+                    System.out.print("Author Id: ");
+                    int authorId = scanner.nextInt();
 
-                    customerDao.insert(new Customer(null, name, email));
+                    Author author = authorDao.findById(authorId);
+
+                    Book book = new Book(null, title, author);
+
+                    bookDao.insert(book);
+
 
                 } catch (DbExeption e) {
 
-                    System.out.println("Customer does not exist");
+                    System.out.println(e.getMessage());
 
                 }
 
                 System.out.println();
 
-            } */
+            }
 
-            /*
+
             // Update
             else if (choice == 5) {
 
@@ -350,11 +420,11 @@ public class Main {
                     System.out.print("Enter the Id: ");
                     int id = scanner.nextInt();
 
-                    Customer customer = customerDao.findById(id);
+                    Book book = bookDao.findById(id);
 
                     System.out.println("==============");
-                    System.out.println("1 - Update Name");
-                    System.out.println("2 - Update Email");
+                    System.out.println("1 - Update Title");
+                    System.out.println("2 - Update Author");
                     System.out.println("==============");
                     System.out.print("Enter: ");
 
@@ -366,10 +436,10 @@ public class Main {
 
                         case 1 -> {
 
-                            System.out.print("Enter the new Name: ");
-                            String name = scanner.nextLine();
+                            System.out.print("Enter the new Title: ");
+                            String title = scanner.nextLine();
 
-                            customer.setName(name);
+                            book.setTitle(title);
 
                         }
 
@@ -377,10 +447,12 @@ public class Main {
 
                             try {
 
-                                System.out.print("Enter the new Email: ");
-                                String email = scanner.next();
+                                System.out.print("Enter the new Author Id: ");
+                                int authorId = scanner.nextInt();
 
-                                customer.setEmail(email);
+                                Author author = authorDao.findById(authorId);
+
+                                book.setAuthor(author);
 
                             } catch (DbExeption e) {
 
@@ -392,7 +464,7 @@ public class Main {
 
                     }
 
-                    customerDao.upadate(customer);
+                    bookDao.upadate(book);
 
                     System.out.println();
 
@@ -402,9 +474,13 @@ public class Main {
 
                 }
 
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
+
                 System.out.println();
 
-            } */
+            }
 
             // Exit
             else {
@@ -419,7 +495,6 @@ public class Main {
 
         }
 
-        scanner.close();
 
     }
 
@@ -427,9 +502,11 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        CustomerDao customerDao = DaoFactory.createCustomerDao();
-
         while (true) {
+
+            System.out.println("=============");
+            System.out.println("   Customer  ");
+            System.out.println("=============");
 
             crud();
 
@@ -447,6 +524,10 @@ public class Main {
                 List<Customer> list = customerDao.findAll();
 
                 for (Customer obj : list) System.out.println(obj);
+
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
 
                 System.out.println();
 
@@ -477,6 +558,10 @@ public class Main {
 
                 }
 
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
+
                 System.out.println();
 
             }
@@ -502,6 +587,10 @@ public class Main {
                     System.out.println("Customer does not exist");
 
                 }
+
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
 
                 System.out.println();
 
@@ -529,6 +618,10 @@ public class Main {
                     System.out.println("Customer does not exist");
 
                 }
+
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
 
                 System.out.println();
 
@@ -598,6 +691,10 @@ public class Main {
 
                 }
 
+                System.out.print("Press to continue...");
+
+                scanner.nextLine();
+
                 System.out.println();
 
             }
@@ -614,8 +711,6 @@ public class Main {
             }
 
         }
-
-        scanner.close();
 
     }
 
